@@ -14,11 +14,10 @@ class Vision(object):
 		self.vision_thread = threading.Thread(target=self.receive_vision)
 		self.vision_thread.start()
 		self.vision_frame = Vision_DetectionFrame()
-		# store blue robot 0's information
-		self.my_blue_robot = Robot()
-		self.my_yellow_robot = Robot()
-		self.blue_robot = dict()
-		self.yellow_robot = dict()
+
+		#self.my_robot = Robot()
+		self.robots_blue = dict()
+		self.robots_yellow = dict()
 		self.ball = Vision_DetectionBall()
 		self.my_ball = Ball()
 
@@ -35,21 +34,13 @@ class Vision(object):
 	def parse_vision(self):
 		for robot_blue in self.vision_frame.robots_blue:
 			# print('Robot Blue {} pos: {} {}'.format(robot_blue.robot_id, robot_blue.x, robot_blue.y))
-			#print(type(robot_blue))
-			if robot_blue.robot_id == 0:
-				self.my_blue_robot.x = robot_blue.x
-				self.my_blue_robot.y = robot_blue.y
-				self.my_blue_robot.vel_x = robot_blue.vel_x
-				self.my_blue_robot.vel_y = robot_blue.vel_y
-				self.my_blue_robot.orientation = robot_blue.orientation
+				self.robots_blue[robot_blue.robot_id] = robot_blue
+
+
 		for robot_yellow in self.vision_frame.robots_yellow:
 			# print('Robot Yellow {} pos: {} {}'.format(robot_yellow.robot_id, robot_yellow.x, robot_yellow.y))
-			if robot_yellow.robot_id == 0:
-				self.my_yellow_robot.x = robot_yellow.x
-				self.my_yellow_robot.y = robot_yellow.y
-				self.my_yellow_robot.vel_x = robot_yellow.vel_x
-				self.my_yellow_robot.vel_y = robot_yellow.vel_y
-				self.my_yellow_robot.orientation = robot_yellow.orientation					
+				self.robots_yellow[robot_yellow.robot_id] = robot_yellow
+	
 
 		self.ball = self.vision_frame.balls
 		while(self.ball.valid):
@@ -61,16 +52,10 @@ class Vision(object):
 
 
 
-class Robot(object):
-	def __init__(self, x=0, y=0, vel_x=0, vel_y=0, orientation=0):
-		self.x = x
-		self.y = y
-		self.vel_x = vel_x
-		self.vel_y = vel_y
-		self.orientation = orientation
+
 
 class Ball(object):
-	def __init__(self, x=0, y=0, vel_x=0, vel_y=0):
+	def __init__(self,  x=0, y=0, vel_x=0, vel_y=0):
 		self.x = x
 		self.y = y
 		self.vel_x = vel_x
@@ -82,3 +67,4 @@ class Ball(object):
 
 if __name__ == '__main__':
 	vision_module = Vision()
+	print(vision_module.robots_yellow.keys())
